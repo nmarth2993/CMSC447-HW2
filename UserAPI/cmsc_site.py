@@ -47,6 +47,7 @@ def hello_world():
 @app.route('/search', methods=['GET'])
 def search():
     name = request.args.get('user')
+    print(f"name: {name}")
 
     person = db.session.query(UserModel).filter_by(name=name).first()
     print(f"person: {person}")
@@ -64,10 +65,13 @@ def create():
     name = data.get('name')
     points = data.get('points')
 
+    print(f"create: name: {name}, id: {person_id}, points: {points}")
+
     if person_id is None or name is None or points is None:
-        return json.dumps({'success': False, 'status': 400})
+        return json.dumps({'success': False, 'status': 400}), 400
 
     person = UserModel(person_id, name, points)
+    print("adding person to database")
 
     db.session.add(person)
     db.session.commit()
